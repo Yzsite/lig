@@ -18,14 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install packages
-        run: docker compose run --rm app sh -c "cd src && npm install" 
-      - name: Build and export
-        run: docker compose run --rm app sh -c "cd src && npm run build" 
-      - name: add nojekyll
-        run: touch src/out/.nojekyll
-      - uses: actions/upload-pages-artifact@v1
-        with:
-          path: "src/out"
+        run: docker compose up -d
 
   deploy:
     environment:
