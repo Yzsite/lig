@@ -1,6 +1,9 @@
 name: nextjs-deploy
 
-on: [push, workflow_dispatch]
+on:
+  push:
+    branches:
+      - "main"
 
 permissions:
   contents: read
@@ -8,29 +11,24 @@ permissions:
   id-token: write
 
 concurrency:
-  group: 'pages'
+  group: "pages"
   cancel-in-progress: true
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-20.04
-
     steps:
       - uses: actions/checkout@v3
-
-      - name: Build
-        run: docker compose up -d
-
-      - name: Add nojekyll
-        run: |
-          cd app
-          mkdir -p app/out
-          touch app/out/.nojekyll
-
+      - name: Install packages
+        run: docker compose run --rm app sh -c "cd src && npm install" 
+      - name: Build and export
+        run: docker compose run --rm app sh -c "cd src && npm run build" 
+      - name: add nojekyll
+        run: touch src/out/.nojekyll
       - uses: actions/upload-pages-artifact@v1
         with:
-          path: 'app/out'
+          path: "src/out"
 
   deploy:
     environment:
