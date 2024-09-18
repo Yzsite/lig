@@ -19,11 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install packages
-        run: docker compose run --rm app sh -c "npm install"
-
       - name: Build
-        run: docker compose run --rm app sh -c "npm run build"
+        run: docker compose up -d --rm app sh -c "npm run build"
 
       - name: Add nojekyll
         run: |
